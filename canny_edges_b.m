@@ -35,7 +35,7 @@ img_dx = imfilter(I, dX, 'symmetric', 'same');
 
 % step 2 : gradient mag and dir
 grad_mag = sqrt(double(img_dx).^2 + double(img_dy).^2);
-grad_dir = atand(double(img_dy), double(img_dx)); % Convert it to degrees.
+grad_dir = atan2(double(img_dy), double(img_dx)) * 180 / pi; % Convert it to degrees.
 %figure, imshow(grad_mag);
 %figure, imshow(grad_dir);
 

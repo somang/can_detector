@@ -23,26 +23,30 @@ filter_size = 5;
 gaus_filter = fspecial ('gaussian', filter_size, sigma);
 [dX dY] = gradient(gaus_filter); % separable filter
 
-I = imfilter(I, gaus_filter, 'same');
-%I = imfilter(I, dX, 'symmetric', 'same'); % do horizontal denoise
+I = imfilter(I, gaus_filter, 'conv');
+%I = imfilter(I, dX, 'symmetric', 'same'); %do horizontal denoise
 %I = imfilter(I, dY, 'symmetric', 'same'); % then vertical denoise
 %figure, imshow(I);
 
 % derivatives of image.
-img_dy = imfilter(I, dY, 'symmetric', 'same');
-img_dx = imfilter(I, dX, 'symmetric', 'same');
+img_dy = imfilter(I, dY, 'conv');
+img_dx = imfilter(I, dX, 'conv');
 %figure, imshow(img_dx), figure, imshow(img_dy);
 
 % step 2 : gradient mag and dir
 grad_mag = sqrt(double(img_dx).^2 + double(img_dy).^2);
-grad_dir = atand(double(img_dy), double(img_dx)); % Convert it to degrees.
+grad_dir = atan2(double(img_dy), double(img_dx)) * 180 / pi; % Convert it to degrees.
 %figure, imshow(grad_mag);
 %figure, imshow(grad_dir);
 
+
+
+
+
 % Discretization of directions
-n_direction_dis = zeros(h, w);
-for i = 1  : h
-    for j = 1 : w
+n_direction_dis = zeros(512, 512);
+for i = 1  : 512
+    for j = 1 : 512
         gd = grad_dir(i, j);
         if (gd >= -22.5 && gd < 22.5) || (gd >= 157.5 && gd <= 180) || (gd < -157.5 && gd >= -180)
             n_direction_dis(i, j) = 0;
@@ -104,7 +108,7 @@ for r = 2 : h-1 % height: number of rows
         end        
     end
 end
-%figure, imshow(sup_im);
+figure, imshow(sup_im);
 
 
 % step 4 : Hysteresis step.
@@ -124,4 +128,4 @@ for r = 1 : h
     end
 end
 
-figure,imshow(edge_I);
+%figure,imshow(edge_I);
