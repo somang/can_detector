@@ -62,7 +62,7 @@ for r = 2 : h-1 % height: number of rows
         
         % if gradient direction is horizontal, then check vertical neighbors.
         if (grad_dir(r,c) == 0)
-            if (grad_mag(r,c) < grad_mag(r-1,c) || grad_mag(r,c) < grad_mag(r+1,c))
+            if (grad_mag(r,c) < grad_mag(r,c-1) || grad_mag(r,c) < grad_mag(r,c+1))
                 sup_im(r,c) = 0;
             else
                 sup_im(r,c) = grad_mag(r,c);
@@ -71,7 +71,7 @@ for r = 2 : h-1 % height: number of rows
         
         % if gradient direction is vertical, then check horizontal neighbors.
         if (grad_dir(r,c) == 90)
-            if (grad_mag(r,c) < grad_mag(r,c-1) || grad_mag(r,c) < grad_mag(r,c+1))
+            if (grad_mag(r,c) < grad_mag(r-1,c) || grad_mag(r,c) < grad_mag(r+1,c))
                 sup_im(r,c) = 0;
             else
                 sup_im(r,c) = grad_mag(r,c);
